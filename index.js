@@ -46,3 +46,5 @@ pc.stderr.on("data", (data) => {
 pc.on("close", (code) => {
   console.log(`child process exited with code ${code}`);
 });
+
+module.exports = { config };
