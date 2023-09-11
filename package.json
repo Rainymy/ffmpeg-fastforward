@@ -1,0 +1,16 @@
+{
+  "name": "ffmpeg-fastforward",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "live": "node ."
+  },
+  "keywords": [],
+  "author": "rainymy",
+  "license": "ISC",
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0"
+  }
+}
