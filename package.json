@@ -1,11 +1,12 @@
 {
   "name": "ffmpeg-fastforward",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "live": "node ."
+    "live": "node .",
+    "test": "node ./test/index.js"
   },
   "keywords": [],
   "author": "rainymy",
