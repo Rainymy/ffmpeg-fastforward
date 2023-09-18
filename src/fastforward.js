@@ -3,16 +3,14 @@ const { spawn } = require('node:child_process');
 
 const ffmpeg = require('ffmpeg-static');
 
-const {
-  containsPrompt,
-  alreadyExists
-} = require('./util.js');
+const util = require('./util.js');
 
 function Fastforward() {
   this.timeoutDuration = 1000 * 60 * 3; /* 3 minute */
   this.skipTo = 0; /* in seconds */
 
   let fileName = null; /* example "./song.mp3" */
+  let extName = null;
 
   let inputFolder = "./src/songs";
   let outputFolder = "./src/songs";
@@ -32,17 +30,18 @@ function Fastforward() {
   this.setInputFolder = (inputFolderPath) => {
     inputFolder = inputFolderPath;
   }
-  this.setOutputFolder = (outputFolder) => {
-    outputFolder = outputFolder;
+  this.setOutputFolder = (outputFolderPath) => {
+    outputFolder = outputFolderPath;
   }
   this.setFileName = (name) => {
     fileName = name;
+    extName = path.extname(name);
   }
 
   this.getConfig = () => { return [...this.config]; };
   this.setDefaultConfig = () => {
     let inputPath = path.join(inputFolder, `./${fileName}`);
-    let outputPath = path.join(outputFolder, `/${this.skipTo}-output.mp3`);
+    let outputPath = path.join(outputFolder, `/${this.skipTo}-output${extName}`);
 
     this.config = [
       "-n", /* no overwrite exit immediately */
@@ -79,13 +78,20 @@ function Fastforward() {
       pc.stderr.on("data", (data) => {
         console.log(`stderr: ${data}`);
 
-        if (containsPrompt(data)) {
+        if (util.containsPrompt(data)) {
           pc.stdin.write("\n y");
         }
+        
+        if (util.pathExists(data)) {
+          console.log("No such file or directory");
+          resolve({ error: true, comment: "No such file or directory" })
+          return;
+        }
 
-        if (alreadyExists(data)) {
+        if (util.alreadyExists(data)) {
           console.log("exists, exiting.");
-          resolve({ error: true, comment: "exists, exiting." })
+          resolve({ error: true, comment: "exists, exiting." });
+          return;
         }
       });
 

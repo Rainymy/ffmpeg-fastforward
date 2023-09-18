@@ -4,6 +4,12 @@ function containsPrompt(data) {
   return lowCaseText.includes("[y/n]");
 }
 
+function pathExists(data) {
+  let lowCaseText = data?.toString()?.toLowerCase() ?? "";
+  
+  return lowCaseText.includes("No such file or directory");
+}
+
 function alreadyExists(data) {
   let lowCaseText = data?.toString()?.toLowerCase() ?? "";
 
@@ -12,5 +18,6 @@ function alreadyExists(data) {
 
 module.exports = {
   containsPrompt: containsPrompt,
+  pathExists: pathExists,
   alreadyExists: alreadyExists
 }
