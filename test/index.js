@@ -1,4 +1,4 @@
-const Fastforward = require('ffmpeg-fastforward');
+const Fastforward = require('../src/fastforward.js');
 
 async function main() {
   const fast = new Fastforward();
