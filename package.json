@@ -1,6 +1,6 @@
 {
-  "name": "ffmpeg-fastforward",
-  "version": "1.1.6",
+  "name": "kimchord-fastforward",
+  "version": "1.1.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,16 +11,16 @@
   "keywords": [],
   "author": "rainymy",
   "license": "MIT",
-  "homepage": "https://github.com/Rainymy/ffmpeg-fastforward",
+  "homepage": "https://github.com/Rainymy/kimchord-fastforward",
   "bugs": {
-    "url": "https://github.com/Rainymy/ffmpeg-fastforward/issues"
+    "url": "https://github.com/Rainymy/kimchord-fastforward/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Rainymy/ffmpeg-fastforward.git"
+    "url": "git://github.com/Rainymy/kimchord-fastforward.git"
   },
   "publishConfig": {
-    "name": "@rainymy/ffmpeg-fastforward"
+    "name": "@rainymy/kimchord-fastforward"
   },
   "dependencies": {
     "ffmpeg-static": "^5.2.0"
