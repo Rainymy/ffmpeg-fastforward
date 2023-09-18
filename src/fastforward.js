@@ -1,3 +1,4 @@
+const fs = require('node:fs');
 const path = require('node:path');
 const { spawn } = require('node:child_process');
 
@@ -12,6 +13,7 @@ function Fastforward() {
   let fileName = null; /* example "./song.mp3" */
   let extName = null;
 
+  let tempFolder = "./temp-fastforward";
   let inputFolder = "./src/songs";
   let outputFolder = "./src/songs";
 
@@ -63,6 +65,29 @@ function Fastforward() {
     return this;
   }
 
+  this.createFolder = (folderPath) => {
+    const tempPath = path.join(__dirname, folderPath);
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+
+  this.emptyFolder = (folderPath) => {
+    const dirs = fs.readdirSync(folderPath);
+    for (let dir of dirs) {
+      const dirPath = path.join(folderPath, dir);
+      fs.unlinkSync(dirPath);
+    }
+
+    return;
+  }
+
+  this.init = (initFolder) => {
+    const tempPath = path.resolve(__dirname, initFolder ?? tempFolder);
+    
+    this.createFolder(tempPath);
+    this.emptyFolder(tempPath);
+
+    return this;
+  }
   this.run = async () => {
     const processConfig = {
       timeout: this.timeoutDuration
@@ -81,7 +106,7 @@ function Fastforward() {
         if (util.containsPrompt(data)) {
           pc.stdin.write("\n y");
         }
-        
+
         if (util.pathExists(data)) {
           console.log("No such file or directory");
           resolve({ error: true, comment: "No such file or directory" })

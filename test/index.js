@@ -8,12 +8,16 @@ fs.mkdirSync(folderPath, { recursive: true });
 async function main() {
   const fast = new Fastforward();
 
+  const tempPath = path.join(__dirname, "temp-fastforward");
+
+  fast.init(tempPath);
+
   fast.setFileName("song.m4a");
   fast.setSkipTo(50);
-  
+
   fast.setInputFolder(folderPath);
   fast.setOutputFolder(folderPath);
-  
+
   fast.setDefaultConfig();
 
   console.log(fast);
@@ -22,7 +26,7 @@ async function main() {
   console.log("-------------------------".repeat(2));
   console.log(res);
   console.log("-------------------------".repeat(2));
-
+  
   return;
 }
 
