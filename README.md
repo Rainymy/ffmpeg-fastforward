@@ -1,2 +1,2 @@
-# ffmpeg-fastforward
+# kimchord-fastforward
  package made for "Kimchord"
