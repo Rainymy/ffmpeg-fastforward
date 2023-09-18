@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg-fastforward",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,9 +15,11 @@
   "bugs": {
     "url": "https://github.com/Rainymy/ffmpeg-fastforward/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/Rainymy/ffmpeg-fastforward.git"
+  "publishConfig": {
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/Rainymy/ffmpeg-fastforward.git"
+    }
   },
   "dependencies": {
     "ffmpeg-static": "^5.2.0"
