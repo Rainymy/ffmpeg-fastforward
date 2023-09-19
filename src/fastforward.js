@@ -13,7 +13,7 @@ function Fastforward() {
   let fileName = null; /* example "./song.mp3" */
   let extName = null;
 
-  let tempFolder = "./temp-fastforward";
+  let tempFolder = "../temp-fastforward";
   let inputFolder = "./src/songs";
   let outputFolder = "./src/songs";
 
