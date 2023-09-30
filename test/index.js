@@ -1,23 +1,19 @@
 "use strict";
-
-const fs = require('node:fs');
 const path = require('node:path');
 const Fastforward = require('../src/fastforward.js');
 
-const folderPath = path.join(__dirname, "./src/songs");
-fs.mkdirSync(folderPath, { recursive: true });
+const tempInput = path.join(process.cwd(), "./test/src/songs");
 
 async function main() {
   const fast = new Fastforward();
   
   const tempPath = path.join(__dirname, "temp-fastforward");
-  
   fast.clean(tempPath);
   
   fast.setFileName("song.m4a");
   fast.setSkipTo(50);
   
-  fast.setInputFolder(folderPath);
+  fast.setInputFolder(tempInput);
   fast.setOutputFolder(tempPath);
   
   fast.setDefaultConfig();

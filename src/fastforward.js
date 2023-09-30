@@ -13,10 +13,10 @@ function Fastforward() {
 
   let fileName = null; /* example "./song.mp3" */
   let extName = "";
-
-  let tempFolder = "../temp-fastforward";
-  let inputFolder = "./src/songs";
-  let outputFolder = "./src/songs";
+  
+  let tempFolder = path.join(process.cwd(), "/temp-fastforward");
+  let inputFolder = path.join(process.cwd(), "/media");
+  let outputFolder = path.join(process.cwd(), "/media");
 
   this.config = [];
 
