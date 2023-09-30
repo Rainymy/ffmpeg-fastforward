@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 test/src/songs
+test/temp-fastforward
 TODO.txt
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

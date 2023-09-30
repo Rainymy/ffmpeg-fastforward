@@ -1,9 +1,10 @@
-const fs = require('node:fs');
+"use strict";
 const path = require('node:path');
 const { spawn } = require('node:child_process');
 
 const ffmpeg = require('ffmpeg-static');
 
+const promptUtil = require('./promptUtil.js');
 const util = require('./util.js');
 
 function Fastforward() {
@@ -11,7 +12,7 @@ function Fastforward() {
   this.skipTo = 0; /* in seconds */
 
   let fileName = null; /* example "./song.mp3" */
-  let extName = null;
+  let extName = "";
 
   let tempFolder = "../temp-fastforward";
   let inputFolder = "./src/songs";
@@ -21,13 +22,12 @@ function Fastforward() {
 
   this.setSkipTo = (skipTo) => {
     if (skipTo <= 0) {
-      console.log("input b");
-      return;
+      return console.log("input b");
     }
     this.skipTo = skipTo;
   }
   this.setTimeoutDuration = (timeoutDuration) => {
-    timeoutDuration = timeoutDuration;
+    this.timeoutDuration = timeoutDuration;
   }
   this.setInputFolder = (inputFolderPath) => {
     inputFolder = inputFolderPath;
@@ -44,16 +44,10 @@ function Fastforward() {
   this.setDefaultConfig = () => {
     let inputPath = path.join(inputFolder, `./${fileName}`);
     let outputPath = path.join(outputFolder, `/${this.skipTo}-output${extName}`);
-
+    
+     /*-n (no overwrite exit immediately) */
     this.config = [
-      "-n", /* no overwrite exit immediately */
-      "-i",
-      inputPath,
-      "-ss",
-      this.skipTo,
-      "-acodec",
-      "copy",
-      outputPath,
+      "-n", "-i", inputPath, "-ss", this.skipTo, "-acodec", "copy", outputPath
     ]
 
     return this;
@@ -65,34 +59,39 @@ function Fastforward() {
     return this;
   }
 
-  this.createFolder = (folderPath) => {
-    const tempPath = path.join(__dirname, folderPath);
-    fs.mkdirSync(folderPath, { recursive: true });
-  }
-
-  this.emptyFolder = (folderPath) => {
-    const dirs = fs.readdirSync(folderPath);
-    for (let dir of dirs) {
-      const dirPath = path.join(folderPath, dir);
-      fs.unlinkSync(dirPath);
-    }
-
-    return;
-  }
-
-  this.init = (initFolder) => {
+  this.createFolder = (folderPath) => util.createFolder(folderPath);
+  this.emptyFolder = (folderPath) => util.deleteAllFilesInFolder(folderPath);
+  
+  this.clean = async (initFolder) => {
     const tempPath = path.resolve(__dirname, initFolder ?? tempFolder);
     
-    this.createFolder(tempPath);
-    this.emptyFolder(tempPath);
+    await this.createFolder(tempPath);
+    await this.emptyFolder(tempPath);
 
     return this;
   }
-  this.run = async () => {
-    const processConfig = {
-      timeout: this.timeoutDuration
+  
+  this.validateSettings = () => {
+    if (!fileName) {
+      return { fail: true, detail: `Invalid filename: ${fileName}` }
     }
+    if (!this.config.length) {
+      return { fail: true, detail: "Require config!" }
+    }
+    if (this.skipTo === 0) {
+      return { fail: true, detail: `Skip more than: ${this.skipTo} seconds` }
+    }
+    
+    return { fail: false, detail: null };
+  }
+  this.run = async () => {
+    const processConfig = { timeout: this.timeoutDuration }
 
+    const { fail, detail } = this.validateSettings();
+    if (fail) {
+      return { error: fail, comment: detail }
+    }
+    
     const pc = spawn(ffmpeg, this.config, processConfig);
 
     return new Promise(function(resolve, reject) {
@@ -103,18 +102,16 @@ function Fastforward() {
       pc.stderr.on("data", (data) => {
         console.log(`stderr: ${data}`);
 
-        if (util.containsPrompt(data)) {
+        if (promptUtil.containsPrompt(data)) {
           pc.stdin.write("\n y");
         }
 
-        if (util.pathExists(data)) {
-          console.log("No such file or directory");
+        if (promptUtil.pathExists(data)) {
           resolve({ error: true, comment: "No such file or directory" })
           return;
         }
 
-        if (util.alreadyExists(data)) {
-          console.log("exists, exiting.");
+        if (promptUtil.alreadyExists(data)) {
           resolve({ error: true, comment: "exists, exiting." });
           return;
         }
@@ -129,8 +126,6 @@ function Fastforward() {
           error: true,
           comment: `child process exited with code ${code}`
         });
-
-        console.log(`child process exited with code ${code}`);
       });
 
       pc.on("error", (error) => {
