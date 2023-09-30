@@ -1,4 +1,4 @@
-# 🚧 Currently under construction 🚧
+## 🚧 Currently under construction 🚧
 Kimchord Fast Forward is a simple npm package that allows you to manipulate audio  and video files by skipping a specified number of seconds. It's a wrapper for  `ffmpeg-static` with a simpler interface.
 
 ### Example Usage
