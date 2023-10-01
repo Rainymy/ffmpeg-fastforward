@@ -21,9 +21,7 @@ function Fastforward() {
   this.config = [];
 
   this.setSkipTo = (skipTo) => {
-    if (skipTo <= 0) {
-      return console.log("input b");
-    }
+    if (skipTo < 0) { return; }
     this.skipTo = skipTo;
   }
   this.setTimeoutDuration = (timeoutDuration) => {
@@ -49,7 +47,7 @@ function Fastforward() {
     
      /*-n (no overwrite exit immediately) */
     this.config = [
-      "-n", "-i", inputPath, "-ss", this.skipTo, "-acodec", "copy", outputPath
+      "-n", "-noaccurate_seek", "-i", inputPath, "-ss", this.skipTo, outputPath, 
     ]
 
     return this;
@@ -101,19 +99,9 @@ function Fastforward() {
       pc.stderr.on("data", (data) => {
         console.log(`stderr: ${data}`);
 
-        if (promptUtil.containsPrompt(data)) {
-          pc.stdin.write("\n y");
-        }
-
-        if (promptUtil.pathExists(data)) {
-          resolve({ error: true, comment: "No such file or directory" })
-          return;
-        }
-
-        if (promptUtil.alreadyExists(data)) {
-          resolve({ error: true, comment: "exists, exiting." });
-          return;
-        }
+        if (promptUtil.containsPrompt(data)) { pc.stdin.write("\n y"); }
+        if (promptUtil.pathExists(data)) { return; }
+        if (promptUtil.alreadyExists(data)) { return; }
       });
 
       pc.on("close", (code) => {
