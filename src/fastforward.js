@@ -11,8 +11,8 @@ function Fastforward() {
   this.timeoutDuration = 1000 * 60 * 3; /* 3 minute */
   this.skipTo = 0; /* in seconds */
 
+  let outFileName = "-output";
   let fileName = null; /* example "./song.mp3" */
-  let extName = "";
   
   let tempFolder = path.join(process.cwd(), "/temp-fastforward");
   let inputFolder = path.join(process.cwd(), "/media");
@@ -37,13 +37,15 @@ function Fastforward() {
   }
   this.setFileName = (name) => {
     fileName = name;
-    extName = path.extname(name);
+  }
+  this.setOutFileName = (name) => {
+    outFileName = name;
   }
 
   this.getConfig = () => { return [...this.config]; };
   this.setDefaultConfig = () => {
     let inputPath = path.join(inputFolder, `./${fileName}`);
-    let outputPath = path.join(outputFolder, `/${this.skipTo}-output${extName}`);
+    let outputPath = path.join(outputFolder, `/${outFileName}`);
     
      /*-n (no overwrite exit immediately) */
     this.config = [
@@ -72,9 +74,6 @@ function Fastforward() {
   }
   
   this.validateSettings = () => {
-    if (!fileName) {
-      return { fail: true, detail: `Invalid filename: ${fileName}` }
-    }
     if (!this.config.length) {
       return { fail: true, detail: "Require config!" }
     }

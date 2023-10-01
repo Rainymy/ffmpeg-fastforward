@@ -11,6 +11,7 @@ async function main() {
   fast.clean(tempPath);
   
   fast.setFileName("song.m4a");
+  fast.setOutFileName(`${50}-output.m4a`);
   fast.setSkipTo(50);
   
   fast.setInputFolder(tempInput);
